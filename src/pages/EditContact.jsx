@@ -1,28 +1,83 @@
-import { useParams, useNavigate } from "react-router-dom"
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import useGlobalReducer from "../hooks/useGlobalReducer";
 
 export default function EditContact() {
     const { id } = useParams();
     const navigate = useNavigate();
+    const { store, dispatch } = useGlobalReducer();
 
-    const [form, setFrom] = useState({
-        Nombre_Apellido: "",
+    // Buscar contacto en el Store
+    const contact = store.contacts.find(c => c.id === Number(id));
+
+    // Estado local del formulario
+    const [form, setForm] = useState({
+        full_name: "",
         email: "",
-        direccion: "",
-        Tlf: ""
+        phone: "",
+        address: ""
     });
 
+    // Cargar datos del contacto al entrar
+    useEffect(() => {
+        if (contact) {
+            setForm({
+                full_name: contact.full_name || "",
+                email: contact.email || "",
+                phone: contact.phone || "",
+                address: contact.address || ""
+            });
+        }
+    }, [contact]);
+
     const handleChange = (e) => {
-        setFrom({
+        setForm({
             ...form,
             [e.target.name]: e.target.value
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Datos a guardar:", form);
-        alert("a implementar el viernes la API");
+
+        try {
+            const resp = await fetch(
+                `https://playground.4geeks.com/contact/agendas/${store.agenda}/contacts/${id}`,
+                {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        full_name: form.full_name,
+                        email: form.email,
+                        phone: form.phone,
+                        address: form.address
+                    })
+                }
+            );
+
+            const data = await resp.json();
+
+            if (!resp.ok) {
+                console.log("Error:", data);
+                throw new Error(data.msg || "Error al actualizar contacto");
+            }
+
+            // La API devuelve { msg, contact }
+            dispatch({
+                type: "editContact",
+                payload: data.contact
+            });
+
+            navigate("/contacts");
+
+        } catch (err) {
+            alert(err.message);
+        }
     };
+
+    if (!contact) {
+        return <h2>No existe el contacto #{id}</h2>;
+    }
 
     return (
         <div className="container mt-4">
@@ -36,7 +91,6 @@ export default function EditContact() {
                     name="full_name"
                     value={form.full_name}
                     onChange={handleChange}
-                    placeholder="Ej: Juan Pérez"
                 />
 
                 <label>Email</label>
@@ -45,7 +99,6 @@ export default function EditContact() {
                     name="email"
                     value={form.email}
                     onChange={handleChange}
-                    placeholder="Ej: juan@mail.com"
                 />
 
                 <label>Teléfono</label>
@@ -54,7 +107,6 @@ export default function EditContact() {
                     name="phone"
                     value={form.phone}
                     onChange={handleChange}
-                    placeholder="Ej: +34 600 123 456"
                 />
 
                 <label>Dirección</label>
@@ -63,7 +115,6 @@ export default function EditContact() {
                     name="address"
                     value={form.address}
                     onChange={handleChange}
-                    placeholder="Ej: Calle Falsa 123"
                 />
 
                 <div className="buttons">
