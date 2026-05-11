@@ -10,10 +10,6 @@ export const initialStore = () => {
 export default function storeReducer(store, action = {}) {
   switch (action.type) {
 
-    case "setAgenda":
-      return { ...store, agenda: action.payload };
-
-
     case "setLoading":
       return { ...store, loading: action.payload };
 

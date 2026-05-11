@@ -7,7 +7,7 @@ export default function AddContact() {
     const navigate = useNavigate();
 
     const [form, setForm] = useState({
-        full_name: "",
+        name: "",
         email: "",
         phone: "",
         address: ""
@@ -24,7 +24,7 @@ export default function AddContact() {
         e.preventDefault();
 
         // Validación mínima
-        if (!form.full_name || !form.email || !form.phone || !form.address) {
+        if (!form.name || !form.email || !form.phone || !form.address) {
             alert("Todos los campos son obligatorios");
             return;
         }
@@ -36,23 +36,18 @@ export default function AddContact() {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        full_name: form.full_name,
-                        email: form.email,
+                        name: form.name,
                         phone: form.phone,
+                        email: form.email,
                         address: form.address
                     })
                 }
             );
 
-            const data = await resp.json();
-
             if (!resp.ok) {
                 console.log("Error:", data);
                 throw new Error(data.msg || "Error al crear contacto");
             }
-
-            // La API devuelve: { msg, contact }
-            dispatch({ type: "addContact", payload: data.contact });
 
             navigate("/contacts");
 
@@ -69,8 +64,8 @@ export default function AddContact() {
                 <label>Nombre completo</label>
                 <input
                     type="text"
-                    name="full_name"
-                    value={form.full_name}
+                    name="name"
+                    value={form.name}
                     onChange={handleChange}
                     required
                 />

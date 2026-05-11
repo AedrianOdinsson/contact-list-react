@@ -44,7 +44,7 @@ export default function Contacts() {
       {store.contacts.map((c) => (
         <div key={c.id} className="card mb-2 p-3 d-flex flex-row justify-content-between">
           <div>
-            <h5>{c.full_name}</h5>
+            <h5>{c.name}</h5>
             <p>{c.address}</p>
             <p>{c.phone}</p>
             <p>{c.email}</p>

@@ -12,7 +12,7 @@ export default function EditContact() {
 
     // Estado local del formulario
     const [form, setForm] = useState({
-        full_name: "",
+        name: "",
         email: "",
         phone: "",
         address: ""
@@ -22,7 +22,7 @@ export default function EditContact() {
     useEffect(() => {
         if (contact) {
             setForm({
-                full_name: contact.full_name || "",
+                name: contact.name || "",
                 email: contact.email || "",
                 phone: contact.phone || "",
                 address: contact.address || ""
@@ -47,7 +47,7 @@ export default function EditContact() {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        full_name: form.full_name,
+                        name: form.name,
                         email: form.email,
                         phone: form.phone,
                         address: form.address
@@ -88,8 +88,8 @@ export default function EditContact() {
                 <label>Nombre completo</label>
                 <input
                     type="text"
-                    name="full_name"
-                    value={form.full_name}
+                    name="name"
+                    value={form.name}
                     onChange={handleChange}
                 />
 
