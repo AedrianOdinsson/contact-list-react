@@ -57,6 +57,9 @@ export default function EditContact() {
 
             const data = await resp.json();
 
+            console.log("DATA:", data);
+
+
             if (!resp.ok) {
                 console.log("Error:", data);
                 throw new Error(data.msg || "Error al actualizar contacto");
@@ -65,7 +68,7 @@ export default function EditContact() {
             // La API devuelve { msg, contact }
             dispatch({
                 type: "editContact",
-                payload: data.contact
+                payload: {id: Number (id), ...form}
             });
 
             navigate("/contacts");
@@ -83,7 +86,7 @@ export default function EditContact() {
         <div className="container mt-4">
             <h1 className="mb-4">Editar contacto #{id}</h1>
 
-            <form onSubmit={handleSubmit} className="edit-form">
+            <form onSubmit={handleSubmit} className="d-flex flex-column gap-3">
 
                 <label>Nombre completo</label>
                 <input
@@ -118,10 +121,10 @@ export default function EditContact() {
                 />
 
                 <div className="buttons">
-                    <button type="submit" className="btn-save">Guardar</button>
+                    <button type="submit" className="btn btn-primary btn-save">Guardar</button>
                     <button
                         type="button"
-                        className="btn-cancel"
+                        className="btn btn-primary btn-cancel"
                         onClick={() => navigate("/contacts")}
                     >
                         Cancelar

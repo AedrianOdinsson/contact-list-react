@@ -60,7 +60,7 @@ export default function AddContact() {
         <div className="container mt-4">
             <h1 className="mb-4">Añadir contacto</h1>
 
-            <form onSubmit={handleSubmit} className="edit-form">
+            <form onSubmit={handleSubmit} className="d-flex flex-column gap-3">
                 <label>Nombre completo</label>
                 <input
                     type="text"
@@ -98,10 +98,10 @@ export default function AddContact() {
                 />
 
                 <div className="buttons">
-                    <button type="submit" className="btn-save">Guardar</button>
+                    <button type="submit" className="btn btn-primary">Guardar</button>
                     <button
                         type="button"
-                        className="btn-cancel"
+                        className="btn btn-primary btn-cancel"
                         onClick={() => navigate("/contacts")}
                     >
                         Cancelar
